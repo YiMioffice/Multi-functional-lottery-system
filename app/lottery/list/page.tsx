@@ -5,23 +5,30 @@ import { storage, STORAGE_KEYS } from '@/lib/storage';
 import { randomSelect } from '@/lib/lottery-utils';
 
 export default function ListLottery() {
-  const [participants, setParticipants] = useState<string[]>(() =>
-    storage.get(STORAGE_KEYS.LIST_CONFIG, [])
-  );
+  const [participants, setParticipants] = useState<string[]>([]);
   const [drawCount, setDrawCount] = useState(1);
   const [results, setResults] = useState<string[]>([]);
   const [drawing, setDrawing] = useState(false);
-  const [history, setHistory] = useState<{ winners: string[]; timestamp: number }[]>(() =>
-    storage.get(STORAGE_KEYS.LIST_HISTORY, [])
-  );
+  const [history, setHistory] = useState<{ winners: string[]; timestamp: number }[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    storage.set(STORAGE_KEYS.LIST_CONFIG, participants);
-  }, [participants]);
+    setMounted(true);
+    setParticipants(storage.get(STORAGE_KEYS.LIST_CONFIG, []));
+    setHistory(storage.get(STORAGE_KEYS.LIST_HISTORY, []));
+  }, []);
 
   useEffect(() => {
-    storage.set(STORAGE_KEYS.LIST_HISTORY, history);
-  }, [history]);
+    if (mounted) {
+      storage.set(STORAGE_KEYS.LIST_CONFIG, participants);
+    }
+  }, [participants, mounted]);
+
+  useEffect(() => {
+    if (mounted) {
+      storage.set(STORAGE_KEYS.LIST_HISTORY, history);
+    }
+  }, [history, mounted]);
 
   const handleDraw = () => {
     if (drawing) return;

@@ -9,35 +9,43 @@ interface BoxConfig {
   isUniform: boolean;
 }
 
-export default function BoxLottery() {
-  const [config, setConfig] = useState<BoxConfig>(() =>
-    storage.get(STORAGE_KEYS.BOX_CONFIG, {
-      prizes: [
-        { id: '1', name: '特等奖', weight: 1 },
-        { id: '2', name: '一等奖', weight: 5 },
-        { id: '3', name: '二等奖', weight: 15 },
-        { id: '4', name: '三等奖', weight: 30 },
-        { id: '5', name: '谢谢参与', weight: 49 },
-      ],
-      isUniform: false,
-    })
-  );
+const defaultConfig: BoxConfig = {
+  prizes: [
+    { id: '1', name: '特等奖', weight: 1 },
+    { id: '2', name: '一等奖', weight: 5 },
+    { id: '3', name: '二等奖', weight: 15 },
+    { id: '4', name: '三等奖', weight: 30 },
+    { id: '5', name: '谢谢参与', weight: 49 },
+  ],
+  isUniform: false,
+};
 
-  const [history, setHistory] = useState<{ prize: string; timestamp: number }[]>(() =>
-    storage.get(STORAGE_KEYS.BOX_HISTORY, [])
-  );
+export default function BoxLottery() {
+  const [config, setConfig] = useState<BoxConfig>(defaultConfig);
+  const [history, setHistory] = useState<{ prize: string; timestamp: number }[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setConfig(storage.get(STORAGE_KEYS.BOX_CONFIG, defaultConfig));
+    setHistory(storage.get(STORAGE_KEYS.BOX_HISTORY, []));
+  }, []);
 
   const [results, setResults] = useState<string[]>([]);
   const [drawing, setDrawing] = useState(false);
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    storage.set(STORAGE_KEYS.BOX_CONFIG, config);
-  }, [config]);
+    if (mounted) {
+      storage.set(STORAGE_KEYS.BOX_CONFIG, config);
+    }
+  }, [config, mounted]);
 
   useEffect(() => {
-    storage.set(STORAGE_KEYS.BOX_HISTORY, history);
-  }, [history]);
+    if (mounted) {
+      storage.set(STORAGE_KEYS.BOX_HISTORY, history);
+    }
+  }, [history, mounted]);
 
   const handleDraw = (count: number) => {
     if (drawing || config.prizes.length === 0) return;

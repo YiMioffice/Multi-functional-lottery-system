@@ -5,17 +5,26 @@ import { storage, STORAGE_KEYS } from '@/lib/storage';
 import { randomInRange } from '@/lib/lottery-utils';
 
 export default function NumberLottery() {
-  const [min, setMin] = useState(() => storage.get(STORAGE_KEYS.NUMBER_HISTORY, []).min || 1);
-  const [max, setMax] = useState(() => storage.get(STORAGE_KEYS.NUMBER_HISTORY, []).max || 100);
+  const [min, setMin] = useState(1);
+  const [max, setMax] = useState(100);
   const [result, setResult] = useState<number | null>(null);
   const [generating, setGenerating] = useState(false);
-  const [history, setHistory] = useState<{ number: number; timestamp: number }[]>(() =>
-    storage.get(STORAGE_KEYS.NUMBER_HISTORY, []).history || []
-  );
+  const [history, setHistory] = useState<{ number: number; timestamp: number }[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    storage.set(STORAGE_KEYS.NUMBER_HISTORY, { min, max, history });
-  }, [min, max, history]);
+    setMounted(true);
+    const saved = storage.get(STORAGE_KEYS.NUMBER_HISTORY, { min: 1, max: 100, history: [] });
+    setMin(saved.min);
+    setMax(saved.max);
+    setHistory(saved.history);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      storage.set(STORAGE_KEYS.NUMBER_HISTORY, { min, max, history });
+    }
+  }, [min, max, history, mounted]);
 
   const handleGenerate = () => {
     if (generating) return;
