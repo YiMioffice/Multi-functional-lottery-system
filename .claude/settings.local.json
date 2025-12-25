@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma:*)",
+      "Bash(if exist prisma.config.ts del prisma.config.ts)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}

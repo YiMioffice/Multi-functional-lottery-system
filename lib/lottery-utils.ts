@@ -4,6 +4,8 @@ export interface Prize {
   id: string;
   name: string;
   weight: number; // 权重，用于不均匀概率
+  imageUrl?: string; // 奖品图片
+  order?: number; // 排序
 }
 
 export interface LotteryResult {

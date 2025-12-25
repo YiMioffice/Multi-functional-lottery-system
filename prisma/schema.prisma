@@ -1,0 +1,77 @@
+// Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String
+  password  String
+  role      String   @default("user") // "admin" 或 "user"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wheels Wheel[]
+}
+
+// 转盘模型
+model Wheel {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        String   @default("wheel") // "wheel" | "box" | "number" | "list"
+  isUniform   Boolean  @default(false)
+  shareCode   String   @unique // 分享码
+
+  // 数字抽奖配置
+  numberMin   Int?     // 最小值
+  numberMax   Int?     // 最大值
+
+  // 名单抽奖配置
+  participants String?  // JSON格式存储参与人名单
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  prizes      Prize[]
+  drawRecords DrawRecord[]
+}
+
+// 奖品模型
+model Prize {
+  id       String  @id @default(cuid())
+  name     String
+  weight   Int     @default(10)
+  imageUrl String? // 奖品图片URL
+  order    Int     @default(0)
+
+  wheelId String
+  wheel   Wheel  @relation(fields: [wheelId], references: [id], onDelete: Cascade)
+
+  drawRecords DrawRecord[]
+}
+
+// 抽奖记录模型
+model DrawRecord {
+  id              String   @id @default(cuid())
+  participantName String   // 参与者姓名
+  resultNumber    Int?     // 数字抽奖结果
+  createdAt       DateTime @default(now())
+
+  wheelId String
+  wheel   Wheel  @relation(fields: [wheelId], references: [id], onDelete: Cascade)
+
+  prizeId String?
+  prize   Prize?  @relation(fields: [prizeId], references: [id])
+}

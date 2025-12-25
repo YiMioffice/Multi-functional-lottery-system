@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { storage, STORAGE_KEYS } from '@/lib/storage';
 import { Prize, weightedRandom, uniformRandom } from '@/lib/lottery-utils';
 
@@ -20,15 +21,26 @@ const defaultConfig: WheelConfig = {
 };
 
 export default function WheelLottery() {
+  const router = useRouter();
   const [config, setConfig] = useState<WheelConfig>(defaultConfig);
   const [history, setHistory] = useState<{ prize: string; timestamp: number }[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // 检查登录状态
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // 未登录，跳转到登录页
+      alert('请先登录后再使用转盘抽奖功能');
+      router.push('/auth');
+      return;
+    }
+    setIsLoggedIn(true);
     setConfig(storage.get(STORAGE_KEYS.WHEEL_CONFIG, defaultConfig));
     setHistory(storage.get(STORAGE_KEYS.WHEEL_HISTORY, []));
-  }, []);
+  }, [router]);
 
   const [isSpinning, setIsSpinning] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -36,16 +48,21 @@ export default function WheelLottery() {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && isLoggedIn) {
       storage.set(STORAGE_KEYS.WHEEL_CONFIG, config);
     }
-  }, [config, mounted]);
+  }, [config, mounted, isLoggedIn]);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && isLoggedIn) {
       storage.set(STORAGE_KEYS.WHEEL_HISTORY, history);
     }
-  }, [history, mounted]);
+  }, [history, mounted, isLoggedIn]);
+
+  // 如果未登录，不渲染任何内容
+  if (!isLoggedIn) {
+    return null;
+  }
 
   const handleSpin = () => {
     if (isSpinning || config.prizes.length === 0) return;

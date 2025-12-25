@@ -1,64 +1,97 @@
 # 多功能抽奖系统
 
-基于 Next.js 14+ 开发的轻量化多功能抽奖系统，界面简洁，操作简单。
+一个功能强大的在线抽奖系统，支持转盘抽奖、用户管理、分享链接等功能。
 
-## 功能特性
+## 🚀 快速开始
 
-### 1. 转盘抽奖
-- 支持均匀转盘（所有奖项概率均等）
-- 支持不均匀转盘（自定义每个奖项的权重占比）
-- 可手动配置奖项名称、权重、奖品名称
-- 动态转盘动画，展示中奖结果
-- 抽奖历史记录
+```bash
+# 1. 安装依赖
+npm install
 
-### 2. 暗箱抽奖
-- 盲抽模式，自定义奖池列表和概率
-- 支持 "单次抽取" 和 "5 次连抽" 两种模式
-- 均匀或不均匀概率配置
-- 抽奖历史记录
+# 2. 初始化数据库
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
 
-### 3. 数字抽奖
-- 输入开奖范围（如 1-100）
-- 随机生成中奖数字
-- 动画效果增强体验
-- 历史记录和统计分析
+# 3. 启动开发服务器
+npm run dev
 
-### 4. 名单抽奖
-- 支持上传纯文本 / CSV 格式的名单列表
-- 手动添加/删除参与人
-- 自定义抽取数量
-- 中奖名单展示
+# 4. 访问应用
+# 浏览器打开 http://localhost:3000
+# 使用默认管理员账户登录：admin@lottery.com / admin123456
+```
+
+## 📋 默认账户
+
+系统提供以下默认账户供测试使用：
+
+| 角色 | 邮箱 | 密码 | 说明 |
+|------|------|------|------|
+| 管理员 | `admin@lottery.com` | `admin123456` | 拥有所有权限 |
+| 普通用户 | `user@lottery.com` | `user123456` | 仅能管理自己的转盘 |
+
+⚠️ **重要**：生产环境请删除或修改默认账户密码！
+
+## 功能特点
+
+### 用户系统
+- ✅ 用户注册和登录
+- ✅ JWT 身份验证
+- ✅ 用户角色管理（管理员/普通用户）
+
+### 转盘抽奖
+- ✅ 创建自定义转盘
+- ✅ 支持均匀概率和加权概率两种模式
+- ✅ 奖品支持上传图片
+- ✅ 精美的转盘动画效果
+
+### 分享功能
+- ✅ 为每个转盘生成唯一分享码
+- ✅ 通过分享链接让其他人参与抽奖
+- ✅ 无需登录即可参与抽奖（只需输入姓名）
+
+### 管理功能
+- ✅ 转盘管理（创建、编辑、删除）
+- ✅ 查看抽奖记录
+- ✅ 查看参与人员和中奖情况
+- ✅ 数据统计
 
 ## 技术栈
 
-- **框架**: Next.js 14+ (App Router)
-- **UI**: React 18 + Tailwind CSS
-- **语言**: TypeScript
-- **数据存储**: localStorage（前端本地存储）
-- **路由**: App Router (app/ 目录)
+- **前端框架**: Next.js 14 (React)
+- **样式**: Tailwind CSS
+- **数据库**: SQLite (Prisma ORM)
+- **身份验证**: JWT (jsonwebtoken)
+- **密码加密**: bcryptjs
+- **文件上传**: 本地文件系统
 
 ## 项目结构
 
 ```
 multi-functional-lottery-system/
 ├── app/
-│   ├── layout.tsx          # 根布局，包含导航栏
+│   ├── layout.tsx          # 根布局
 │   ├── page.tsx            # 首页
-│   ├── globals.css         # 全局样式
-│   └── lottery/
-│       ├── wheel/          # 转盘抽奖
-│       ├── box/            # 暗箱抽奖
-│       ├── number/         # 数字抽奖
-│       └── list/           # 名单抽奖
+│   ├── auth/               # 登录注册页面
+│   ├── dashboard/          # 管理面板
+│   ├── share/              # 分享抽奖页面
+│   └── api/                # API 路由
+│       ├── auth/           # 认证API
+│       ├── wheels/         # 转盘管理API
+│       ├── share/          # 分享API
+│       ├── draw-records/   # 抽奖记录API
+│       └── upload/         # 文件上传API
 ├── lib/
-│   ├── storage.ts          # localStorage 工具类
-│   └── lottery-utils.ts    # 抽奖算法工具
-├── public/                 # 静态资源
-├── package.json
-├── tsconfig.json
-├── tailwind.config.ts
-├── postcss.config.js
-└── next.config.js
+│   ├── prisma.ts           # Prisma 客户端
+│   ├── auth.ts             # 认证工具
+│   ├── api.ts              # API 请求封装
+│   ├── storage.ts          # localStorage 工具
+│   └── lottery-utils.ts    # 抽奖算法
+├── prisma/
+│   └── schema.prisma       # 数据库模型
+├── public/
+│   └── uploads/            # 上传的图片
+└── ...
 ```
 
 ## 安装和运行
@@ -67,85 +100,156 @@ multi-functional-lottery-system/
 
 ```bash
 npm install
-# 或
-yarn install
-# 或
-pnpm install
 ```
 
-### 2. 运行开发服务器
+### 2. 配置环境变量
+
+复制 `.env.example` 为 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+可以修改 `.env` 中的配置：
+
+```
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-secret-key-change-this-in-production"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
+
+### 3. 初始化数据库
+
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
+```
+
+数据库初始化后，系统会自动创建以下默认账户：
+
+**默认管理员账户：**
+- 邮箱：`admin@lottery.com`
+- 密码：`admin123456`
+- 角色：管理员
+
+**测试用户账户：**
+- 邮箱：`user@lottery.com`
+- 密码：`user123456`
+- 角色：普通用户
+
+⚠️ **安全提示**：首次登录后请立即修改默认密码！
+
+### 4. 启动开发服务器
 
 ```bash
 npm run dev
-# 或
-yarn dev
-# 或
-pnpm dev
 ```
 
-### 3. 打开浏览器
+访问 [http://localhost:3000](http://localhost:3000) 即可使用。
 
-访问 [http://localhost:3000](http://localhost:3000) 查看应用。
+## 使用指南
 
-## 路由说明
+### 创建转盘
 
-- `/` - 首页（功能导航）
-- `/lottery/wheel` - 转盘抽奖
-- `/lottery/box` - 暗箱抽奖
-- `/lottery/number` - 数字抽奖
-- `/lottery/list` - 名单抽奖
+1. 注册/登录账号
+2. 进入管理面板
+3. 点击"创建新转盘"
+4. 填写转盘名称、描述
+5. 添加奖品并设置权重（可上传图片）
+6. 选择概率模式（均匀/加权）
+7. 创建完成
 
-## 使用说明
+### 分享转盘
 
-### 转盘抽奖
+1. 在管理面板找到要分享的转盘
+2. 点击"分享"按钮复制分享链接
+3. 将链接发送给其他人
+4. 其他人打开链接后输入姓名即可参与抽奖
 
-1. 点击 "编辑配置" 按钮
-2. 配置奖项名称和权重（如果不勾选 "均匀概率"）
-3. 点击 "开始抽奖" 按钮
-4. 转盘转动后显示中奖结果
+### 查看抽奖记录
 
-### 暗箱抽奖
+1. 在管理面板点击转盘的"查看详情"
+2. 可以看到：
+   - 所有奖品配置
+   - 抽奖记录列表
+   - 参与人数统计
+   - 中奖情况统计
 
-1. 编辑奖项配置（名称和权重）
-2. 选择 "单次抽取" 或 "5次连抽"
-3. 查看抽取结果
+## API 接口
 
-### 数字抽奖
+### 认证相关
+- `POST /api/auth/register` - 用户注册
+- `POST /api/auth/login` - 用户登录
+- `GET /api/auth/me` - 获取当前用户信息
 
-1. 设置最小值和最大值
-2. 点击 "开始开奖"
-3. 查看随机生成的中奖数字
+### 转盘管理
+- `GET /api/wheels` - 获取用户的所有转盘
+- `POST /api/wheels` - 创建新转盘
+- `GET /api/wheels/[id]` - 获取转盘详情
+- `PUT /api/wheels/[id]` - 更新转盘
+- `DELETE /api/wheels/[id]` - 删除转盘
 
-### 名单抽奖
+### 分享和抽奖
+- `GET /api/share/[shareCode]` - 通过分享码获取转盘
+- `POST /api/draw-records` - 创建抽奖记录
+- `GET /api/draw-records?wheelId=xxx` - 获取转盘的抽奖记录
 
-1. 上传 .txt 或 .csv 文件（每行一个姓名）
-2. 或手动添加参与人
-3. 设置抽取人数
-4. 点击 "开始抽奖"
+### 文件上传
+- `POST /api/upload` - 上传图片
 
-## 数据存储
+## 数据库模型
 
-所有数据使用浏览器 localStorage 存储，包括：
-- 奖项配置
-- 抽奖历史记录
-- 用户设置
+### User（用户）
+- id: 用户ID
+- email: 邮箱（唯一）
+- username: 用户名
+- password: 密码（加密）
+- role: 角色（admin/user）
 
-注意：清除浏览器缓存会导致数据丢失。
+### Wheel（转盘）
+- id: 转盘ID
+- name: 转盘名称
+- description: 描述
+- isUniform: 是否均匀概率
+- shareCode: 分享码（唯一）
+- userId: 创建者ID
 
-## 构建生产版本
+### Prize（奖品）
+- id: 奖品ID
+- name: 奖品名称
+- weight: 权重
+- imageUrl: 图片URL
+- order: 排序
+- wheelId: 所属转盘ID
+
+### DrawRecord（抽奖记录）
+- id: 记录ID
+- participantName: 参与者姓名
+- wheelId: 转盘ID
+- prizeId: 中奖奖品ID
+- createdAt: 抽奖时间
+
+## 部署
+
+### 构建生产版本
 
 ```bash
 npm run build
 npm start
 ```
 
-## 注意事项
+### 注意事项
 
-- 本项目仅适用于 PC 端
-- 无需后端服务，纯前端实现
-- 数据仅存储在本地浏览器，不支持跨设备同步
-- 建议使用现代浏览器（Chrome、Firefox、Edge 等）
+1. 生产环境请务必修改 `JWT_SECRET`
+2. 建议使用 PostgreSQL 或 MySQL 替代 SQLite
+3. 图片上传建议使用云存储服务（如 AWS S3、阿里云 OSS）
+4. 设置适当的文件上传大小限制
 
-## License
+## 许可证
 
 MIT
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
