@@ -55,14 +55,22 @@ export function randomInRange(min: number, max: number): number {
 
 /**
  * 从数组中随机选择指定数量的元素（不重复）
+ * 使用 Fisher-Yates 洗牌算法确保真正的随机性
  * @param array 数组
  * @param count 选择数量
  * @returns 选中的元素数组
  */
 export function randomSelect<T>(array: T[], count: number): T[] {
   if (count >= array.length) return [...array];
+  if (count <= 0) return [];
 
-  const shuffled = [...array].sort(() => Math.random() - 0.5);
+  // Fisher-Yates 洗牌算法
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
   return shuffled.slice(0, count);
 }
 
