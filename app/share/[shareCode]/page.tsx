@@ -15,6 +15,7 @@ interface Wheel {
   description?: string
   type: string
   isUniform: boolean
+  showProbability: boolean
   shareCode: string
   prizes: Prize[]
   numberMin?: number
@@ -354,7 +355,7 @@ export default function SharePage() {
                 />
               )}
               <p className="font-medium text-sm">{prize.name}</p>
-              {!wheel.isUniform && (
+              {wheel.showProbability && !wheel.isUniform && (
                 <p className="text-xs text-gray-500 mt-1">
                   概率: {((prize.weight / wheel.prizes.reduce((sum, p) => sum + p.weight, 0)) * 100).toFixed(1)}%
                 </p>

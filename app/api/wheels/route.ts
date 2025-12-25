@@ -9,6 +9,7 @@ const createWheelSchema = z.object({
   description: z.string().optional(),
   type: z.enum(['wheel', 'box', 'number', 'list']).default('wheel'),
   isUniform: z.boolean().default(false),
+  showProbability: z.boolean().default(true),
   prizes: z.array(z.object({
     name: z.string().min(1, '奖品名称不能为空'),
     weight: z.number().int().min(0),
@@ -80,7 +81,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const { name, description, type, isUniform, prizes, numberMin, numberMax, participants } = validationResult.data
+    const { name, description, type, isUniform, showProbability, prizes, numberMin, numberMax, participants } = validationResult.data
 
     // 根据类型验证必要字段
     if ((type === 'wheel' || type === 'box') && (!prizes || prizes.length === 0)) {
@@ -121,6 +122,7 @@ export async function POST(request: Request) {
         description,
         type,
         isUniform,
+        showProbability,
         shareCode,
         userId: user.userId,
         numberMin: type === 'number' ? numberMin : undefined,

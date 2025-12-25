@@ -29,6 +29,7 @@ model Wheel {
   description String?
   type        String   @default("wheel") // "wheel" | "box" | "number" | "list"
   isUniform   Boolean  @default(false)
+  showProbability Boolean @default(true) // 是否公开显示概率
   shareCode   String   @unique // 分享码
 
   // 数字抽奖配置

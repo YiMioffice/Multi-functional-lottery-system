@@ -213,6 +213,7 @@ function CreateWheelModal({ onClose, onSuccess }: { onClose: () => void; onSucce
   const [description, setDescription] = useState('')
   const [type, setType] = useState<'wheel' | 'box' | 'number' | 'list'>('wheel')
   const [isUniform, setIsUniform] = useState(false)
+  const [showProbability, setShowProbability] = useState(true)
   const [prizes, setPrizes] = useState<Prize[]>([
     { name: '一等奖', weight: 10, order: 0 },
     { name: '二等奖', weight: 20, order: 1 },
@@ -288,6 +289,7 @@ function CreateWheelModal({ onClose, onSuccess }: { onClose: () => void; onSucce
         description,
         type,
         isUniform,
+        showProbability,
       }
 
       if (type === 'wheel' || type === 'box') {
@@ -385,6 +387,19 @@ function CreateWheelModal({ onClose, onSuccess }: { onClose: () => void; onSucce
                   className="w-4 h-4"
                 />
                 <label htmlFor="uniform" className="text-sm">均匀概率（所有奖品概率相等）</label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="showProbability"
+                  checked={showProbability}
+                  onChange={(e) => setShowProbability(e.target.checked)}
+                  className="w-4 h-4"
+                />
+                <label htmlFor="showProbability" className="text-sm">
+                  公开显示概率（参与者可以看到中奖概率）
+                </label>
               </div>
 
               <div>
