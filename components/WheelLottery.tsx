@@ -16,7 +16,8 @@ export default function WheelLottery({ prizes, isUniform, participantName, onDra
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [rotation, setRotation] = useState(0)
 
-  const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF']
+  // Bauhaus Palette: Red, Blue, Yellow, White
+  const colors = ['#E93424', '#16508D', '#F4CD00', '#F9F9F5']
 
   useEffect(() => {
     drawWheel()
@@ -50,12 +51,18 @@ export default function WheelLottery({ prizes, isUniform, participantName, onDra
       ctx.arc(0, 0, radius, startAngle, endAngle)
       ctx.lineTo(0, 0)
       ctx.fill()
+
+      // Add thick borders for Bauhaus look
+      ctx.strokeStyle = '#1A1A1A'
+      ctx.lineWidth = 4
       ctx.stroke()
 
       ctx.save()
       ctx.rotate(startAngle + arcSize / 2)
       ctx.textAlign = 'center'
-      ctx.fillStyle = '#fff'
+      // Adjust text color based on background
+      const bgColor = colors[index % colors.length]
+      ctx.fillStyle = (bgColor === '#F9F9F5' || bgColor === '#F4CD00') ? '#1A1A1A' : '#F9F9F5'
       ctx.font = 'bold 16px Arial'
       ctx.fillText(prize.name, radius * 0.65, 0)
       ctx.restore()
@@ -63,12 +70,12 @@ export default function WheelLottery({ prizes, isUniform, participantName, onDra
 
     ctx.restore()
 
-    // 绘制指针
+    // Draw pointer (Bauhaus style: simple triangle outline or solid)
     ctx.beginPath()
-    ctx.fillStyle = '#FF0000'
-    ctx.moveTo(centerX, centerY - radius - 10)
-    ctx.lineTo(centerX - 15, centerY - radius + 10)
-    ctx.lineTo(centerX + 15, centerY - radius + 10)
+    ctx.fillStyle = '#1A1A1A'
+    ctx.moveTo(centerX, centerY - radius - 20)
+    ctx.lineTo(centerX - 20, centerY - radius + 20)
+    ctx.lineTo(centerX + 20, centerY - radius + 20)
     ctx.closePath()
     ctx.fill()
   }
@@ -112,33 +119,33 @@ export default function WheelLottery({ prizes, isUniform, participantName, onDra
 
   return (
     <div className="flex flex-col items-center space-y-6">
-      <div className="relative">
+      <div className="relative border-4 border-bauhaus-black rounded-full overflow-hidden p-1 bg-white shadow-hard">
         <canvas
           ref={canvasRef}
           width={400}
           height={400}
-          className="max-w-full"
+          className="max-w-full rounded-full"
         />
       </div>
 
       <button
         onClick={handleSpin}
         disabled={isSpinning || !participantName.trim()}
-        className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold rounded-full hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-105 shadow-lg"
+        className="bauhaus-button-primary px-8 py-4 text-xl uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSpinning ? '抽奖中...' : '开始抽奖'}
       </button>
 
       {result && !isSpinning && (
-        <div className="mt-6 p-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-xl animate-bounce">
-          <p className="text-white text-xl font-bold text-center">
+        <div className="mt-6 p-6 bauhaus-card bg-bauhaus-yellow text-bauhaus-black animate-pulse">
+          <p className="text-2xl font-black text-center uppercase">
             恭喜您抽中：{result.name}
           </p>
           {result.imageUrl && (
             <img
               src={result.imageUrl}
               alt={result.name}
-              className="mt-4 w-48 h-48 object-cover mx-auto rounded-lg"
+              className="mt-4 w-48 h-48 object-cover mx-auto border-4 border-bauhaus-black shadow-hard"
             />
           )}
         </div>

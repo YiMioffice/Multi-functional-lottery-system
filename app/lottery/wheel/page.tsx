@@ -129,8 +129,8 @@ export default function WheelLottery() {
     if (config.prizes.length === 0) return null;
 
     const colors = [
-      '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
-      '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2',
+      '#E93424', '#16508D', '#F4CD00', '#F9F9F5',
+      '#E93424', '#16508D', '#F4CD00', '#F9F9F5',
     ];
 
     return (
@@ -205,14 +205,14 @@ export default function WheelLottery() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 左侧：转盘区域 */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bauhaus-panel p-6">
           <div className="flex justify-center mb-6">{renderWheel()}</div>
 
           <div className="text-center space-y-4">
             <button
               onClick={handleSpin}
               disabled={isSpinning || config.prizes.length === 0}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="bauhaus-button-primary px-8 py-3 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               {isSpinning ? '抽奖中...' : '开始抽奖'}
             </button>
@@ -232,12 +232,12 @@ export default function WheelLottery() {
         </div>
 
         {/* 右侧：配置区域 */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bauhaus-panel p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">奖项配置</h2>
             <button
               onClick={() => setEditing(!editing)}
-              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+              className="bauhaus-button px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 transition-colors"
             >
               {editing ? '完成编辑' : '编辑配置'}
             </button>
@@ -316,12 +316,12 @@ export default function WheelLottery() {
 
       {/* 历史记录 */}
       {history.length > 0 && (
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bauhaus-panel p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">抽奖历史</h2>
             <button
               onClick={resetHistory}
-              className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="bauhaus-button px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
               清空历史
             </button>

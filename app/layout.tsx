@@ -13,41 +13,39 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className="bg-gray-50 min-h-screen">
-        <nav className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex">
-                <div className="flex-shrink-0 flex items-center">
-                  <a href="/" className="text-xl font-bold text-gray-900">多功能抽奖系统</a>
-                </div>
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  <a
-                    href="/"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    首页
-                  </a>
-                  <a
-                    href="/dashboard"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    管理面板
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <a
-                  href="/auth"
-                  className="text-gray-500 hover:text-gray-700 px-3 py-2 text-sm font-medium"
-                >
-                  登录
-                </a>
-              </div>
+      <body className="min-h-screen text-bauhaus-black antialiased selection:bg-bauhaus-yellow selection:text-bauhaus-black">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-bauhaus-white border-b-4 border-bauhaus-black h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-8">
+            <div className="flex-shrink-0">
+              <a href="/" className="text-2xl font-black uppercase tracking-tighter hover:text-bauhaus-red transition-colors bauhaus-text-title">
+                多功能抽奖系统
+              </a>
+            </div>
+            <div className="hidden sm:flex sm:space-x-4 border-l-2 border-bauhaus-black pl-8">
+              <a
+                href="/"
+                className="text-bauhaus-black hover:bg-bauhaus-yellow hover:text-bauhaus-black px-4 py-2 border-2 border-transparent hover:border-bauhaus-black font-bold transition-all"
+              >
+                首页
+              </a>
+              <a
+                href="/dashboard"
+                className="text-bauhaus-black hover:bg-bauhaus-blue hover:text-white px-4 py-2 border-2 border-transparent hover:border-bauhaus-black font-bold transition-all"
+              >
+                管理面板
+              </a>
             </div>
           </div>
+          <div className="flex items-center">
+            <a
+              href="/auth"
+              className="bauhaus-button px-6 py-2 text-sm uppercase tracking-wide hover:bg-bauhaus-red hover:text-white"
+            >
+              登录
+            </a>
+          </div>
         </nav>
-        <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <main className="max-w-7xl mx-auto pt-24 pb-12 px-4 sm:px-6 lg:px-8">
           {children}
         </main>
       </body>

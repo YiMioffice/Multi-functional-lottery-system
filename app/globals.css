@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --bauhaus-red: #E93424;
+  --bauhaus-blue: #16508D;
+  --bauhaus-yellow: #F4CD00;
+  --bauhaus-white: #F9F9F5;
+  --bauhaus-black: #1A1A1A;
+}
+
+body {
+  background: var(--bauhaus-white);
+  color: var(--bauhaus-black);
+}
+
+@layer utilities {
+  .bauhaus-panel {
+    background: var(--bauhaus-white);
+    border: 3px solid var(--bauhaus-black);
+    box-shadow: 4px 4px 0 0 var(--bauhaus-black);
+  }
+
+  .bauhaus-card {
+    background: var(--bauhaus-white);
+    border: 3px solid var(--bauhaus-black);
+    box-shadow: 6px 6px 0 0 var(--bauhaus-black);
+    transition: all 0.2s ease;
+  }
+
+  .bauhaus-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 0 var(--bauhaus-black);
+  }
+
+  .bauhaus-button {
+    background: var(--bauhaus-white);
+    border: 2px solid var(--bauhaus-black);
+    box-shadow: 4px 4px 0 0 var(--bauhaus-black);
+    font-weight: 700;
+    transition: all 0.1s ease;
+  }
+
+  .bauhaus-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--bauhaus-black);
+  }
+
+  .bauhaus-button-primary {
+    background: var(--bauhaus-blue);
+    color: white;
+    border: 2px solid var(--bauhaus-black);
+    box-shadow: 4px 4px 0 0 var(--bauhaus-black);
+  }
+
+  .bauhaus-button-primary:hover {
+    background: #104070;
+  }
+
+  .bauhaus-text-title {
+    color: var(--bauhaus-black);
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+  }
+}
